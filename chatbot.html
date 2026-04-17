@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Chat – Gemini</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0e0f11;
+      --surface: #1a1b1e;
+      --border: #2a2b30;
+      --user-bubble: #1a73e8;
+      --ai-bubble: #1e2027;
+      --text: #e8e9ed;
+      --subtext: #8b8d97;
+      --accent: #1a73e8;
+      --send-hover: #1558b0;
+      --input-bg: #1e2027;
+      --radius-msg: 18px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100dvh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .chat-container {
+      width: 100%;
+      max-width: 480px;
+      height: 100dvh;
+      max-height: 780px;
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+    }
+
+    /* ── Header ── */
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4285f4, #34a853, #fbbc04, #ea4335);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .header-info h2 { font-size: 15px; font-weight: 600; }
+    .header-info span { font-size: 12px; color: #4ade80; font-weight: 500; }
+    .header-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #4ade80; display: inline-block; margin-right: 4px;
+    }
+
+    /* ── API Key Banner ── */
+    #key-banner {
+      background: #1e2a1e;
+      border-bottom: 1px solid #2a3d2a;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #key-banner input {
+      flex: 1;
+      background: #111;
+      border: 1px solid #2a3d2a;
+      border-radius: 8px;
+      color: var(--text);
+      font-family: monospace;
+      font-size: 12px;
+      padding: 6px 10px;
+      outline: none;
+    }
+
+    #key-banner input:focus { border-color: #4ade80; }
+    #key-banner input::placeholder { color: var(--subtext); }
+
+    #save-key-btn {
+      background: #4ade80;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    #save-key-btn:hover { background: #22c55e; }
+
+    .key-hint {
+      font-size: 11px;
+      color: #4ade80;
+    }
+
+    /* ── Messages ── */
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      scroll-behavior: smooth;
+    }
+
+    .messages::-webkit-scrollbar { width: 4px; }
+    .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .msg-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      animation: fadeUp 0.22s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-row.user { justify-content: flex-end; }
+    .msg-row.ai   { justify-content: flex-start; }
+
+    .msg-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: linear-gradient(135deg, #4285f4, #34a853);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; flex-shrink: 0;
+    }
+
+    .bubble {
+      max-width: 72%;
+      padding: 10px 14px;
+      border-radius: var(--radius-msg);
+      font-size: 14.5px;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+
+    .msg-row.user .bubble {
+      background: var(--user-bubble);
+      color: #fff;
+      border-bottom-right-radius: 5px;
+    }
+
+    .msg-row.ai .bubble {
+      background: var(--ai-bubble);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 5px;
+    }
+
+    .timestamp {
+      font-size: 10.5px; color: var(--subtext);
+      margin-top: 3px; text-align: right;
+    }
+    .msg-row.ai .timestamp { text-align: left; }
+
+    /* Thinking bubble */
+    .thinking .bubble {
+      display: flex; align-items: center; gap: 8px;
+      color: var(--subtext); font-size: 13px;
+    }
+
+    .dots { display: flex; gap: 4px; }
+    .dots span {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--subtext);
+      animation: bounce 1.1s infinite ease-in-out;
+    }
+    .dots span:nth-child(2) { animation-delay: 0.18s; }
+    .dots span:nth-child(3) { animation-delay: 0.36s; }
+
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+      30%            { transform: translateY(-5px); opacity: 1; }
+    }
+
+    /* ── Input Bar ── */
+    .input-bar {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .input-bar textarea {
+      flex: 1;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      color: var(--text);
+      font-family: inherit; font-size: 14px;
+      padding: 10px 16px; resize: none; outline: none;
+      min-height: 42px; max-height: 120px; line-height: 1.5;
+      transition: border-color 0.2s;
+    }
+
+    .input-bar textarea::placeholder { color: var(--subtext); }
+    .input-bar textarea:focus { border-color: var(--accent); }
+
+    .send-btn {
+      width: 42px; height: 42px; border-radius: 50%;
+      border: none; background: var(--accent); color: #fff;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: background 0.2s, transform 0.1s;
+    }
+
+    .send-btn:hover  { background: var(--send-hover); }
+    .send-btn:active { transform: scale(0.93); }
+    .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .send-btn svg { width: 18px; height: 18px; }
+  </style>
+</head>
+<body>
+
+<div class="chat-container">
+
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="avatar">✨</div>
+    <div class="header-info">
+      <h2>Gemini AI</h2>
+      <span><span class="header-dot"></span>Free tier</span>
+    </div>
+  </div>
+
+
+  <!-- Messages -->
+  <div class="messages" id="messages">
+    <div class="msg-row ai">
+      <div class="msg-avatar">✨</div>
+      <div>
+        <div class="bubble">Hi! I'm Gemini. Paste your API key above to get started 👆</div>
+        <div class="timestamp">Just now</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input -->
+  <div class="input-bar">
+    <textarea
+      id="userInput"
+      placeholder="Type a message…"
+      rows="1"
+      oninput="autoResize(this)"
+      onkeydown="handleKey(event)"
+    ></textarea>
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+
+</div>
+
+<script>
+  const messagesEl = document.getElementById('messages');
+  const inputEl    = document.getElementById('userInput');
+  const sendBtn    = document.getElementById('sendBtn');
+
+  // ── Conversation history for multi-turn context ──
+ const SYSTEM_PROMPT = `You are PadiCare, a Malaysian agriculture expert assistant.
+
+Rules:
+- Always respond in Bahasa Malaysia.
+- Only answer questions related to agriculture, farming, crops, or market prices.
+- Be practical, clear, and actionable (tell the user what to DO).
+- Use simple language suitable for farmers.
+- If unsure, ask follow-up questions instead of guessing.
+- If the question relates to crop disease, suggest uploading an image.
+- If the question relates to planning, provide structured steps.
+- If the question relates to market prices, give recommendation (jual/simpan/tunggu).
+
+Tone:
+- Friendly, respectful, and professional.
+
+Goal:
+Help farmers make better decisions.`;
+
+const history = [
+  {
+    role: "user",
+    parts: [{ text: SYSTEM_PROMPT }]
+  }
+];
+
+ let API_KEY = '';
+
+  function getTime() {
+    return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function appendMessage(role, text) {
+    const row = document.createElement('div');
+    row.className = `msg-row ${role}`;
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.textContent = text;
+
+    const ts = document.createElement('div');
+    ts.className = 'timestamp';
+    ts.textContent = getTime();
+
+    const wrap = document.createElement('div');
+    wrap.appendChild(bubble);
+    wrap.appendChild(ts);
+
+    if (role === 'ai') {
+      const av = document.createElement('div');
+      av.className = 'msg-avatar';
+      av.textContent = '✨';
+      row.appendChild(av);
+    }
+
+    row.appendChild(wrap);
+    messagesEl.appendChild(row);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function showThinking() {
+    const row = document.createElement('div');
+    row.className = 'msg-row ai thinking';
+    row.id = 'thinking';
+
+    const av = document.createElement('div');
+    av.className = 'msg-avatar';
+    av.textContent = '✨';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.innerHTML = `
+      <span>Thinking</span>
+      <div class="dots"><span></span><span></span><span></span></div>`;
+
+    row.appendChild(av);
+    row.appendChild(bubble);
+    messagesEl.appendChild(row);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function removeThinking() {
+    const el = document.getElementById('thinking');
+    if (el) el.remove();
+  }
+
+  async function sendMessage() {
+    const text = inputEl.value.trim();
+    if (!text) return;
+
+    inputEl.value = '';
+    inputEl.style.height = 'auto';
+    sendBtn.disabled = true;
+
+    appendMessage('user', text);
+
+    // Add to history
+    history.push({ role: 'user', parts: [{ text }] });
+
+    showThinking();
+
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: history })
+        }
+      );
+
+      const data = await res.json();
+      removeThinking();
+
+      if (data.error) {
+        appendMessage('ai', `Error: ${data.error.message}`);
+      } else {
+        const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text
+          || "Sorry, I couldn't get a response.";
+
+        // Add AI reply to history for multi-turn
+        history.push({ role: 'model', parts: [{ text: reply }] });
+
+        appendMessage('ai', reply);
+      }
+
+    } catch (err) {
+      removeThinking();
+      appendMessage('ai', 'Network error. Check your API key or internet connection.');
+      console.error(err);
+    }
+
+    sendBtn.disabled = false;
+    inputEl.focus();
+  }
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  }
+</script>
+
+</body>
+</html>
