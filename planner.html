@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PadiCare – Yield Planner</title>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo"><a href="index.html" style="color:white">🌾 PadiCare</a></div>
+    <ul class="nav-links">
+      <li><a href="scanner.html">Disease Scanner</a></li>
+      <li><a href="planner.html">Yield Planner</a></li>
+      <li><a href="market.html">Market Prices</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-header">
+    <h1>📊 Yield & Resource Planner</h1>
+    <p>Tell us about your farm — get a personalised AI planting plan</p>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <label>Jenis Tanaman / Crop Type</label>
+      <select id="crop">
+        <option value="padi">Padi (Rice)</option>
+        <option value="jagung">Jagung (Corn)</option>
+        <option value="sayur bayam">Bayam (Spinach)</option>
+        <option value="cili">Cili (Chili)</option>
+      </select>
+
+      <label>Keluasan Tanah / Land Size (ekar)</label>
+      <input type="number" id="landSize" placeholder="Contoh: 2.5" min="0.1"/>
+
+      <label>Akses Air / Water Access</label>
+      <select id="water">
+        <option value="sistem saliran">Sistem Saliran (Irrigation)</option>
+        <option value="hujan sahaja">Hujan Sahaja (Rain-fed only)</option>
+        <option value="sungai berdekatan">Sungai Berdekatan (Nearby river)</option>
+      </select>
+
+      <label>Bajet Baja / Fertilizer Budget (RM)</label>
+      <input type="number" id="budget" placeholder="Contoh: 500" min="0"/>
+
+      <label>Pengalaman Bertani / Farming Experience</label>
+      <select id="experience">
+        <option value="baru">Baru Bermula (Beginner)</option>
+        <option value="sederhana">Sederhana (Intermediate)</option>
+        <option value="berpengalaman">Berpengalaman (Experienced)</option>
+      </select>
+
+      <button class="btn-green" onclick="generatePlan()">📋 Jana Pelan Saya / Generate My Plan</button>
+
+      <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <p>AI sedang menyediakan pelan anda...</p>
+      </div>
+
+      <div class="result-box" id="resultBox"></div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="js/planner.js"></script>
+</body>
+</html>
