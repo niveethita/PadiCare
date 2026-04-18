@@ -72,49 +72,6 @@
       background: #4ade80; display: inline-block; margin-right: 4px;
     }
 
-    /* ── API Key Banner ── */
-    #key-banner {
-      background: #1e2a1e;
-      border-bottom: 1px solid #2a3d2a;
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    #key-banner input {
-      flex: 1;
-      background: #111;
-      border: 1px solid #2a3d2a;
-      border-radius: 8px;
-      color: var(--text);
-      font-family: monospace;
-      font-size: 12px;
-      padding: 6px 10px;
-      outline: none;
-    }
-
-    #key-banner input:focus { border-color: #4ade80; }
-    #key-banner input::placeholder { color: var(--subtext); }
-
-    #save-key-btn {
-      background: #4ade80;
-      color: #000;
-      border: none;
-      border-radius: 8px;
-      padding: 6px 12px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    #save-key-btn:hover { background: #22c55e; }
-
-    .key-hint {
-      font-size: 11px;
-      color: #4ade80;
-    }
 
     /* ── Messages ── */
     .messages {
@@ -254,7 +211,7 @@
     <div class="msg-row ai">
       <div class="msg-avatar">✨</div>
       <div>
-        <div class="bubble">Hi! I'm Gemini. Paste your API key above to get started 👆</div>
+        <div class="bubble">Salam sejahtera! Saya PadiCare, pakar pertanian anda. Bagaimana saya boleh membantu anda?</div>
         <div class="timestamp">Just now</div>
       </div>
     </div>
@@ -311,7 +268,7 @@ const history = [
   }
 ];
 
- let API_KEY = '';
+ let API_KEY = 'AIzaSyDMql7lNT8g1ka5F9Jot8Q0Q1rCF3G_-54';
 
   function getTime() {
     return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
