@@ -1,4 +1,5 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { retryWithBackoff } = require('../orchestrator');
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -8,7 +9,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
  * Returns structured diagnosis with treatment steps
  */
 async function cropDoctor(imageBase64, textDescription, history) {
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
   const CROP_DOCTOR_PROMPT = `You are PadiCare's Crop Doctor, an expert plant pathologist specializing in Malaysian agriculture.
 
@@ -65,16 +66,16 @@ Common Malaysian rice diseases to recognize:
         }
       };
 
-      result = await model.generateContent([
+      result = await retryWithBackoff(() => model.generateContent([
         CROP_DOCTOR_PROMPT,
         imageData,
         textDescription ? `User description: ${textDescription}` : ''
-      ]);
+      ]));
     } else {
       // Text-only diagnosis (flash handles both text and vision)
-      result = await model.generateContent(
+      result = await retryWithBackoff(() => model.generateContent(
         `${CROP_DOCTOR_PROMPT}\n\nUser description of symptoms: ${textDescription}`
-      );
+      ));
     }
 
     const response = result.response.text();

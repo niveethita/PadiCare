@@ -1,4 +1,5 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { retryWithBackoff } = require('../orchestrator');
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -7,7 +8,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
  * Creates week-by-week farming schedules based on inputs
  */
 async function farmPlanner(entities, history) {
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
   const FARM_PLANNER_PROMPT = `You are PadiCare's Farm Planning Expert.
 
@@ -59,9 +60,9 @@ SEASONS:
     // Build context from entities
     const context = buildPlanningContext(entities);
 
-    const result = await model.generateContent(
+    const result = await retryWithBackoff(() => model.generateContent(
       `${FARM_PLANNER_PROMPT}\n\n${context}\n\nCreate the farming schedule based on these inputs.`
-    );
+    ));
 
     const response = result.response.text();
 

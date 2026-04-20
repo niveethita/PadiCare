@@ -294,7 +294,7 @@
   const agentIndicator = document.getElementById('agentIndicator');
   const errorContainer = document.getElementById('errorContainer');
 
-  const API_URL = 'http://localhost:3000/api/chat';
+  const API_URL = 'http://127.0.0.1:3008/api/chat';
   let sessionId = null;
   let currentImage = null;
 
@@ -453,7 +453,7 @@
 
     } catch (err) {
       removeThinking();
-      showError('Ralat: ' + err.message + '. Pastikan server berjalan di localhost:3000');
+      showError('Ralat: ' + err.message + '. Pastikan server berjalan (npm run dev)');
       console.error(err);
     }
 
