@@ -2,12 +2,29 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+// Retry wrapper for rate-limited API calls
+async function retryWithBackoff(fn, maxRetries = 3) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      if (error.status === 429 && i < maxRetries - 1) {
+        const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+        console.log(`Rate limited. Retrying in ${delay.toFixed(0)}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      } else {
+        throw error;
+      }
+    }
+  }
+}
+
 /**
  * Orchestrator: Determines intent and extracts entities from farmer message
  * Returns: { intent, confidence, extracted_entities }
  */
 async function orchestrate(message, hasImage, history) {
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
   const ORCHESTRATOR_PROMPT = `You are PadiCare's Intent Classification System.
 
@@ -62,7 +79,7 @@ Has image attached: ${hasImage ? 'yes' : 'no'}
 Return ONLY the JSON response, no markdown, no explanation.`;
 
   try {
-    const result = await model.generateContent(ORCHESTRATOR_PROMPT);
+    const result = await retryWithBackoff(() => model.generateContent(ORCHESTRATOR_PROMPT));
     const response = result.response.text();
 
     // Parse JSON from response
@@ -87,15 +104,38 @@ Return ONLY the JSON response, no markdown, no explanation.`;
     throw new Error('Invalid JSON response from Gemini');
 
   } catch (error) {
-    console.error('Orchestrator error:', error);
-    // Fallback to general if parsing fails
+    console.error('Orchestrator error:', error.message);
+
+    // Rule-based fallback when API is rate-limited
+    const msg = message.toLowerCase();
+    let intent = 'general';
+    let confidence = 0.5;
+
+    if (hasImage || msg.includes('kuning') || msg.includes('bintik') || msg.includes('layu') || msg.includes('rosak') || msg.includes('penyakit')) {
+      intent = 'crop_disease';
+      confidence = 0.8;
+    } else if (msg.includes('harga') || msg.includes('jual') || msg.includes('pasaran') || msg.includes('market')) {
+      intent = 'market';
+      confidence = 0.8;
+    } else if (msg.includes('jadual') || msg.includes('rancang') || msg.includes('tanam') || msg.includes('plan')) {
+      intent = 'plan';
+      confidence = 0.7;
+    }
+
     return {
-      intent: 'general',
-      confidence: 0.3,
-      extracted_entities: {},
-      reasoning: 'Error in classification, falling back to general'
+      intent,
+      confidence,
+      extracted_entities: {
+        crop_type: msg.includes('padi') ? 'padi' : (msg.includes('jagung') ? 'jagung' : null),
+        symptoms: [],
+        location: null,
+        land_size: null,
+        budget: null,
+        timeframe: null
+      },
+      reasoning: error.status === 429 ? 'API rate limited, using rule-based fallback' : 'Error in classification, using fallback'
     };
   }
 }
 
-module.exports = { orchestrate };
+module.exports = { orchestrate, retryWithBackoff };

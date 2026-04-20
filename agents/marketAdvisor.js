@@ -1,4 +1,5 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { retryWithBackoff } = require('../orchestrator');
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -7,7 +8,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
  * Provides price recommendations and selling advice
  */
 async function marketAdvisor(cropType, location, history) {
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
   const MARKET_ADVISOR_PROMPT = `You are PadiCare's Market Intelligence Expert.
 
@@ -63,9 +64,9 @@ Always explain your reasoning in Bahasa Malaysia for farmers.`;
     // Get mock FAMA data (replace with actual API in production)
     const famaData = getMockFAMAData(cropType, location);
 
-    const result = await model.generateContent(
+    const result = await retryWithBackoff(() => model.generateContent(
       `${MARKET_ADVISOR_PROMPT}\n\nCrop: ${cropType}\nLocation: ${location || 'Malaysia'}\n\nCurrent FAMA Data:\n${JSON.stringify(famaData, null, 2)}\n\nProvide market recommendation.`
-    );
+    ));
 
     const response = result.response.text();
 
