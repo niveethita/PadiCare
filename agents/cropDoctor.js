@@ -3,103 +3,54 @@ const { retryWithBackoff } = require('../orchestrator');
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-/**
- * Agent 1: Crop Doctor
- * Analyzes crop images and symptoms to diagnose diseases
- * Returns structured diagnosis with treatment steps
- */
 async function cropDoctor(imageBase64, textDescription, history) {
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+  const model = genAI.getGenerativeModel({
+    model: 'gemini-2.0-flash',
+    generationConfig: { maxOutputTokens: 800 }
+  });
 
-  const CROP_DOCTOR_PROMPT = `You are PadiCare's Crop Doctor, an expert plant pathologist specializing in Malaysian agriculture.
-
-Your task: Analyze the crop image and/or description to provide a diagnosis.
-
-RESPONSE FORMAT - Return ONLY valid JSON:
+  const PROMPT = `You are PadiCare's Crop Doctor, expert in Malaysian agriculture.
+Analyze the crop image and/or description and return ONLY valid JSON:
 {
-  "disease_name": "scientific or common name of disease/pest",
+  "disease_name": "name of disease",
   "confidence": 0.0-1.0,
   "severity": "mild|moderate|severe",
-  "explanation_bm": "explanation in Bahasa Malaysia about what the disease is",
-  "treatment_steps": [
-    "step 1 in Bahasa Malaysia",
-    "step 2 in Bahasa Malaysia",
-    "step 3 in Bahasa Malaysia"
-  ],
-  "prevention_tips": [
-    "prevention tip 1 in Bahasa Malaysia",
-    "prevention tip 2 in Bahasa Malaysia"
-  ],
+  "explanation_bm": "explanation in Bahasa Malaysia",
+  "treatment_steps": ["step 1 in BM", "step 2 in BM", "step 3 in BM"],
+  "prevention_tips": ["tip 1 in BM", "tip 2 in BM"],
   "urgency": "immediate|within_3_days|within_week|not_urgent",
   "recommended_products": ["product 1", "product 2"],
-  "when_to_consult_expert": "conditions when they should see DOA officer"
+  "when_to_consult_expert": "when to see DOA officer"
 }
-
-DIAGNOSIS GUIDELINES:
-- Be specific about the disease name (e.g., "Penyakit Hawar Daun Bakteria" not just "sakit")
-- Severity based on visible damage:
-  * mild = early stage, few affected plants
-  * moderate = spreading, some yield impact
-  * severe = widespread, major yield loss risk
-- Treatment steps must be actionable and practical for farmers
-- Always use Bahasa Malaysia for farmer-facing content
-- If unsure, express lower confidence and suggest expert consultation
-
-Common Malaysian rice diseases to recognize:
-- Penyakit Blast Padi (neck blast, leaf blast)
-- Hawar Daun Bakteria (bacterial leaf blight)
-- Hawar Daun Perang (brown spot)
-- Kuning Kerdil (tungro virus - yellow orange leaves)
-- Putih Beras (rice white tip nematode)
-- Busuk Batang (stem rot)
-- Padi Angin (lodging/falling)`;
+Common diseases: Penyakit Blast Padi, Hawar Daun Bakteria, Hawar Daun Perang, Kuning Kerdil, Busuk Batang.
+Always use Bahasa Malaysia for all text fields.`;
 
   try {
     let result;
-
     if (imageBase64) {
-      // Analyze image with vision model
-      const imageData = {
-        inlineData: {
-          data: imageBase64.replace(/^data:image\/\w+;base64,/, ''),
-          mimeType: 'image/jpeg'
-        }
-      };
-
+      const cleanBase64 = imageBase64.replace(/^data:image\/\w+;base64,/, '');
       result = await retryWithBackoff(() => model.generateContent([
-        CROP_DOCTOR_PROMPT,
-        imageData,
-        textDescription ? `User description: ${textDescription}` : ''
+        PROMPT,
+        { inlineData: { data: cleanBase64, mimeType: 'image/jpeg' } },
+        textDescription ? `User description: ${textDescription}` : 'Analyze this crop image.'
       ]));
     } else {
-      // Text-only diagnosis (flash handles both text and vision)
       result = await retryWithBackoff(() => model.generateContent(
-        `${CROP_DOCTOR_PROMPT}\n\nUser description of symptoms: ${textDescription}`
+        `${PROMPT}\n\nUser description: ${textDescription}`
       ));
     }
 
     const response = result.response.text();
-
-    // Parse JSON response
     const jsonMatch = response.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       const diagnosis = JSON.parse(jsonMatch[0]);
-
-      // Format human-readable reply
-      const reply = formatDiagnosisReply(diagnosis);
-
-      return {
-        reply,
-        structured_data: diagnosis
-      };
+      return { reply: formatDiagnosisReply(diagnosis), structured_data: diagnosis };
     }
-
     throw new Error('Invalid JSON from Crop Doctor');
-
   } catch (error) {
-    console.error('Crop Doctor error:', error);
+    console.error('Crop Doctor error:', error.message);
     return {
-      reply: `Maaf, saya menghadapi masalah semasa menganalisis tanaman anda. Sila cuba lagi atau hubungi pegawai pertanian terdekat untuk bantuan lanjut.\n\n(Error: ${error.message})`,
+      reply: `Maaf, saya menghadapi masalah semasa menganalisis tanaman anda. Sila cuba lagi.\n\n(Error: ${error.message})`,
       structured_data: null
     };
   }
@@ -107,32 +58,22 @@ Common Malaysian rice diseases to recognize:
 
 function formatDiagnosisReply(diagnosis) {
   const urgencyMap = {
-    'immediate': 'Segera',
-    'within_3_days': 'Dalam 3 hari',
-    'within_week': 'Dalam seminggu',
-    'not_urgent': 'Tidak mendesak'
+    'immediate': 'Segera', 'within_3_days': 'Dalam 3 hari',
+    'within_week': 'Dalam seminggu', 'not_urgent': 'Tidak mendesak'
   };
-
   let reply = `**Diagnosis: ${diagnosis.disease_name}**\n\n`;
   reply += `${diagnosis.explanation_bm}\n\n`;
-  reply += `**Paras Keparahan:** ${diagnosis.severity}\n`;
-  reply += `**Keperluan Tindakan:** ${urgencyMap[diagnosis.urgency] || diagnosis.urgency}\n\n`;
-  reply += `**Langkah-Langkah Rawatan:**\n`;
-  diagnosis.treatment_steps.forEach((step, i) => {
-    reply += `${i + 1}. ${step}\n`;
-  });
-
-  if (diagnosis.prevention_tips && diagnosis.prevention_tips.length > 0) {
+  reply += `**Keparahan:** ${diagnosis.severity}\n`;
+  reply += `**Tindakan:** ${urgencyMap[diagnosis.urgency] || diagnosis.urgency}\n\n`;
+  reply += `**Langkah Rawatan:**\n`;
+  diagnosis.treatment_steps.forEach((step, i) => { reply += `${i + 1}. ${step}\n`; });
+  if (diagnosis.prevention_tips?.length > 0) {
     reply += `\n**Tips Pencegahan:**\n`;
-    diagnosis.prevention_tips.forEach((tip, i) => {
-      reply += `• ${tip}\n`;
-    });
+    diagnosis.prevention_tips.forEach(tip => { reply += `• ${tip}\n`; });
   }
-
   if (diagnosis.when_to_consult_expert) {
-    reply += `\n**Bila Perlu Rujuk Pakar:** ${diagnosis.when_to_consult_expert}`;
+    reply += `\n**Bila Rujuk Pakar:** ${diagnosis.when_to_consult_expert}`;
   }
-
   return reply;
 }
 
