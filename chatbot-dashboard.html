@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PadiCare AI Chat - Dashboard</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0b0d;
+      --surface: #15171a;
+      --surface-2: #1e2127;
+      --border: #2a2d35;
+      --border-light: #3a3f4a;
+      --user-bubble: #1a73e8;
+      --ai-bubble: #252830;
+      --text: #e8e9ed;
+      --subtext: #8b9099;
+      --accent: #1a73e8;
+      --accent-green: #22c55e;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+      --accent-purple: #a855f7;
+      --send-hover: #1558b0;
+      --input-bg: #1e2127;
+      --radius-msg: 16px;
+      --radius-card: 14px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.4);
+      --shadow-lg: 0 8px 40px rgba(0,0,0,0.5);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    .app-container {
+      display: flex;
+      height: 100dvh;
+      max-width: 1600px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    /* Sidebar Dashboard */
+    .sidebar {
+      width: 340px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+      height: 100%;
+      max-height: 100dvh;
+    }
+
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .sidebar-header {
+      padding: 24px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+    }
+
+    .logo-text h1 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text span {
+      font-size: 12px;
+      color: var(--subtext);
+      font-weight: 500;
+    }
+
+    .dashboard-content {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Card Component */
+    .card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 16px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--border-light);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--subtext);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .card-icon.weather { background: rgba(59, 130, 246, 0.15); }
+    .card-icon.health { background: rgba(34, 197, 94, 0.15); }
+    .card-icon.market { background: rgba(245, 158, 11, 0.15); }
+    .card-icon.activity { background: rgba(168, 85, 247, 0.15); }
+
+    /* Weather Widget */
+    .weather-main {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .weather-temp {
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1;
+      background: linear-gradient(135deg, #fff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .weather-info {
+      flex: 1;
+    }
+
+    .weather-condition {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .weather-location {
+      font-size: 12px;
+      color: var(--subtext);
+    }
+
+    .weather-emoji {
+      font-size: 48px;
+      line-height: 1;
+    }
+
+    .weather-details {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .weather-detail {
+      text-align: center;
+    }
+
+    .weather-detail-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .weather-detail-label {
+      font-size: 10px;
+      color: var(--subtext);
+      margin-top: 2px;
+    }
+
+    /* Crop Health Widget */
+    .health-score {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .health-ring {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent-green) 85%, var(--border) 85%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .health-ring::before {
+      content: '';
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      position: absolute;
+    }
+
+    .health-percent {
+      position: relative;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent-green);
+    }
+
+    .health-status {
+      flex: 1;
+    }
+
+    .health-status-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .health-status-text {
+      font-size: 12px;
+      color: var(--subtext);
+    }
+
+    .health-indicators {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .indicator-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .indicator-dot.good { background: var(--accent-green); }
+    .indicator-dot.warning { background: var(--accent-amber); }
+    .indicator-dot.critical { background: var(--accent-red); }
+
+    .indicator-text {
+      flex: 1;
+      font-size: 12px;
+      color: var(--subtext);
+    }
+
+    .indicator-value {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* Market Prices Widget */
+    .market-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .market-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      background: var(--surface);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .market-crop {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .crop-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--surface-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .crop-name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .crop-unit {
+      font-size: 10px;
+      color: var(--subtext);
+    }
+
+    .market-price {
+      text-align: right;
+    }
+
+    .price-value {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .price-change {
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .price-change.up { color: var(--accent-green); }
+    .price-change.down { color: var(--accent-red); }
+
+    /* Quick Stats Widget */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .stat-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .stat-value.blue { color: var(--accent); }
+    .stat-value.green { color: var(--accent-green); }
+    .stat-value.amber { color: var(--accent-amber); }
+    .stat-value.purple { color: var(--accent-purple); }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--subtext);
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .action-chip {
+      padding: 8px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 12px;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .action-chip:hover {
+      background: var(--border-light);
+      border-color: var(--accent);
+    }
+
+    /* Main Chat Area */
+    .chat-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      position: relative;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    /* Toggle Sidebar Button (mobile) */
+    .sidebar-toggle {
+      display: none;
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      z-index: 100;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 20px;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .header-info h2 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .header-info span {
+      font-size: 12px;
+      color: var(--accent-green);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .agent-indicator {
+      font-size: 10px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      margin-left: auto;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .agent-indicator.crop_disease { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
+    .agent-indicator.plan { background: rgba(34, 197, 94, 0.15); color: var(--accent-green); }
+    .agent-indicator.market { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); }
+    .agent-indicator.general { background: var(--surface-2); color: var(--subtext); }
+
+    .connection-status {
+      font-size: 11px;
+      padding: 6px 12px;
+      text-align: center;
+      color: var(--subtext);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .connection-status.connected { color: var(--accent-green); }
+    .connection-status.error { color: var(--accent-red); }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scroll-behavior: smooth;
+      min-height: 0;
+      max-height: 100%;
+    }
+
+    .messages::-webkit-scrollbar { width: 6px; }
+    .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .welcome-banner {
+      background: linear-gradient(135deg, rgba(26, 115, 232, 0.1), rgba(34, 197, 94, 0.05));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 24px;
+      margin-bottom: 8px;
+    }
+
+    .welcome-banner h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .welcome-banner p {
+      font-size: 14px;
+      color: var(--subtext);
+      line-height: 1.6;
+    }
+
+    .suggestion-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .suggestion-chip {
+      padding: 10px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      font-size: 13px;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .suggestion-chip:hover {
+      background: var(--surface-2);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .msg-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      animation: fadeUp 0.25s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-row.user { justify-content: flex-end; }
+    .msg-row.ai { justify-content: flex-start; }
+
+    .msg-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .bubble {
+      max-width: 75%;
+      padding: 12px 16px;
+      border-radius: var(--radius-msg);
+      font-size: 14.5px;
+      line-height: 1.6;
+      overflow-wrap: break-word;
+    }
+
+    .msg-row.user .bubble {
+      background: var(--user-bubble);
+      color: #fff;
+      border-bottom-right-radius: 6px;
+    }
+
+    .msg-row.ai .bubble {
+      background: var(--ai-bubble);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 6px;
+    }
+
+    .bubble strong { font-weight: 600; }
+    .bubble em { font-style: italic; }
+    .bubble code {
+      background: rgba(255,255,255,0.08);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-family: 'Inter', monospace;
+    }
+
+    .timestamp {
+      font-size: 11px;
+      color: var(--subtext);
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    .msg-row.ai .timestamp { text-align: left; }
+
+    .thinking .bubble {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--subtext);
+      font-size: 13px;
+    }
+
+    .dots { display: flex; gap: 4px; }
+    .dots span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--subtext);
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+    .dots span:nth-child(2) { animation-delay: 0.15s; }
+    .dots span:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-6px); opacity: 1; }
+    }
+
+    .error-msg {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid var(--accent-red);
+      color: #fca5a5;
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin: 8px 0;
+      font-size: 13px;
+    }
+
+    /* Input Area */
+    .input-area {
+      padding: 16px 0 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .input-bar {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 8px 8px 8px 16px;
+      transition: border-color 0.2s;
+    }
+
+    .input-bar:focus-within {
+      border-color: var(--accent);
+    }
+
+    .input-bar textarea {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      padding: 8px 0;
+      resize: none;
+      outline: none;
+      min-height: 24px;
+      max-height: 120px;
+      line-height: 1.5;
+    }
+
+    .input-bar textarea::placeholder { color: var(--subtext); }
+
+    .input-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      color: var(--subtext);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s;
+    }
+
+    .icon-btn:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .icon-btn.has-image {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .send-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .send-btn:hover { background: var(--send-hover); }
+    .send-btn:active { transform: scale(0.95); }
+    .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .send-btn svg { width: 16px; height: 16px; }
+
+    #imageInput { display: none; }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100dvh;
+        z-index: 99;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.6);
+        z-index: 98;
+      }
+
+      .sidebar-overlay.show {
+        display: block;
+      }
+
+      .sidebar-toggle {
+        display: flex;
+      }
+
+      .chat-container {
+        padding: 0 16px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .chat-container {
+        padding: 0 12px;
+      }
+
+      .bubble {
+        max-width: 85%;
+      }
+    }
+
+    /* Typing indicator */
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 0;
+    }
+
+    /* Image preview in chat */
+    .image-preview {
+      max-width: 200px;
+      max-height: 150px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      border: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Sidebar Overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- Sidebar Dashboard -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">🌾</div>
+      <div class="logo-text">
+        <h1>PadiCare</h1>
+        <span>Smart Farming Assistant</span>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+      <!-- Weather Widget -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="card-icon weather">🌤️</span>
+            Cuaca
+          </div>
+        </div>
+        <div class="weather-main">
+          <div class="weather-emoji">⛅</div>
+          <div class="weather-temp">32°</div>
+          <div class="weather-info">
+            <div class="weather-condition">Cerah Berawan</div>
+            <div class="weather-location">📍 Selangor, MY</div>
+          </div>
+        </div>
+        <div class="weather-details">
+          <div class="weather-detail">
+            <div class="weather-detail-value">78%</div>
+            <div class="weather-detail-label">Lembap</div>
+          </div>
+          <div class="weather-detail">
+            <div class="weather-detail-value">12km/h</div>
+            <div class="weather-detail-label">Angin</div>
+          </div>
+          <div class="weather-detail">
+            <div class="weather-detail-value">0mm</div>
+            <div class="weather-detail-label">Hujan</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Crop Health Widget -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="card-icon health">🌱</span>
+            Kesihatan Tanaman
+          </div>
+        </div>
+        <div class="health-score">
+          <div class="health-ring">
+            <span class="health-percent">85%</span>
+          </div>
+          <div class="health-status">
+            <div class="health-status-title">Keadaan Baik</div>
+            <div class="health-status-text">Sawah Padi Lot A</div>
+          </div>
+        </div>
+        <div class="health-indicators">
+          <div class="indicator">
+            <span class="indicator-dot good"></span>
+            <span class="indicator-text">Air</span>
+            <span class="indicator-value">Optimum</span>
+          </div>
+          <div class="indicator">
+            <span class="indicator-dot good"></span>
+            <span class="indicator-text">Nutrien</span>
+            <span class="indicator-value">Cukup</span>
+          </div>
+          <div class="indicator">
+            <span class="indicator-dot warning"></span>
+            <span class="indicator-text">Perosak</span>
+            <span class="indicator-value">Pantau</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Market Prices Widget -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="card-icon market">📊</span>
+            Harga Pasaran
+          </div>
+        </div>
+        <div class="market-list">
+          <div class="market-item">
+            <div class="market-crop">
+              <div class="crop-icon">🌾</div>
+              <div>
+                <div class="crop-name">Beras</div>
+                <div class="crop-unit">/ tan metrik</div>
+              </div>
+            </div>
+            <div class="market-price">
+              <div class="price-value">RM2,850</div>
+              <div class="price-change up">↑ 2.3%</div>
+            </div>
+          </div>
+          <div class="market-item">
+            <div class="market-crop">
+              <div class="crop-icon">🌽</div>
+              <div>
+                <div class="crop-name">Jagung</div>
+                <div class="crop-unit">/ tan metrik</div>
+              </div>
+            </div>
+            <div class="market-price">
+              <div class="price-value">RM1,420</div>
+              <div class="price-change down">↓ 0.8%</div>
+            </div>
+          </div>
+          <div class="market-item">
+            <div class="market-crop">
+              <div class="crop-icon">🌶️</div>
+              <div>
+                <div class="crop-name">Cili</div>
+                <div class="crop-unit">/ kg</div>
+              </div>
+            </div>
+            <div class="market-price">
+              <div class="price-value">RM8.50</div>
+              <div class="price-change up">↑ 5.2%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats Widget -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="card-icon activity">📈</span>
+            Statistik
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-value green">12</div>
+            <div class="stat-label">Hari Menuai</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value blue">85%</div>
+            <div class="stat-label">Tunas Aktif</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value amber">4.2</div>
+            <div class="stat-label">pH Tanah</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value purple">28°C</div>
+            <div class="stat-label">Suhu Tanah</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">⚡ Tindakan Pantas</div>
+        </div>
+        <div class="quick-actions">
+          <button class="action-chip" onclick="sendQuickMessage('Semak penyakit padi')">🦠 Semak Penyakit</button>
+          <button class="action-chip" onclick="sendQuickMessage('Rancang penanaman')">📅 Rancang</button>
+          <button class="action-chip" onclick="sendQuickMessage('Harga pasaran terkini')">💰 Harga</button>
+          <button class="action-chip" onclick="sendQuickMessage('Tips penjagaan')">💡 Tips</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Chat Area -->
+  <main class="chat-area">
+    <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">☰</button>
+
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="avatar">🌾</div>
+        <div class="header-info">
+          <h2>PadiCare AI</h2>
+          <span><span class="header-dot"></span>Dalam Talian</span>
+        </div>
+        <span id="agentIndicator" class="agent-indicator general" style="display:none">General</span>
+      </div>
+
+      <div class="connection-status" id="connectionStatus">Menyambung ke server...</div>
+
+      <div class="messages" id="messages">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+          <h3>👋 Selamat Datang ke PadiCare</h3>
+          <p>Saya pembantu pertanian pintar anda. Tanya saya tentang penyakit tanaman, perancangan ladang, harga pasaran, atau upload gambar untuk diagnosis.</p>
+          <div class="suggestion-chips">
+            <button class="suggestion-chip" onclick="sendQuickMessage('Apakah penyakit biasa pada padi?')">Penyakit Padi</button>
+            <button class="suggestion-chip" onclick="sendQuickMessage('Bila musim menuai?')">Musim Menuai</button>
+            <button class="suggestion-chip" onclick="sendQuickMessage('Tips meningkatkan hasil')">Tingkatkan Hasil</button>
+            <button class="suggestion-chip" onclick="sendQuickMessage('Harga beras terkini')">Harga Beras</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="errorContainer"></div>
+
+      <div class="input-area">
+        <div class="input-bar">
+          <textarea
+            id="userInput"
+            placeholder="Taip mesej atau tanya soalan..."
+            rows="1"
+            oninput="autoResize(this)"
+            onkeydown="handleKey(event)"
+          ></textarea>
+          <div class="input-actions">
+            <input type="file" id="imageInput" accept="image/*" onchange="handleImageSelect(event)">
+            <button class="icon-btn" id="imageBtn" onclick="document.getElementById('imageInput').click()" title="Upload gambar">
+              📷
+            </button>
+            <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  const messagesEl = document.getElementById('messages');
+  const inputEl = document.getElementById('userInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const imageBtn = document.getElementById('imageBtn');
+  const agentIndicator = document.getElementById('agentIndicator');
+  const errorContainer = document.getElementById('errorContainer');
+  const connectionStatus = document.getElementById('connectionStatus');
+
+  const API_URL = 'http://127.0.0.1:3008/api/chat';
+  let sessionId = null;
+  let currentImage = null;
+
+  // Check connection on load
+  checkConnection();
+
+  function getTime() {
+    return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  async function checkConnection() {
+    try {
+      const response = await fetch('http://127.0.0.1:3008/health', { method: 'GET' });
+      if (response.ok) {
+        connectionStatus.textContent = 'Sambungan berjaya ✓';
+        connectionStatus.className = 'connection-status connected';
+        setTimeout(() => { connectionStatus.style.display = 'none'; }, 3000);
+      } else {
+        throw new Error('Server error');
+      }
+    } catch (err) {
+      connectionStatus.textContent = 'Tidak dapat menyambung ke server';
+      connectionStatus.className = 'connection-status error';
+    }
+  }
+
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  }
+
+  function sendQuickMessage(text) {
+    inputEl.value = text;
+    autoResize(inputEl);
+    sendMessage();
+  }
+
+  function showAgent(intent) {
+    const labels = {
+      'crop_disease': 'Crop Doctor',
+      'plan': 'Farm Planner',
+      'market': 'Market Advisor',
+      'general': 'General'
+    };
+    agentIndicator.textContent = labels[intent] || 'General';
+    agentIndicator.className = 'agent-indicator ' + intent;
+    agentIndicator.style.display = 'inline-block';
+  }
+
+  function showError(message) {
+    errorContainer.innerHTML = `<div class="error-msg">${message}</div>`;
+    setTimeout(() => { errorContainer.innerHTML = ''; }, 5000);
+  }
+
+  function handleImageSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      currentImage = e.target.result;
+      imageBtn.classList.add('has-image');
+      imageBtn.textContent = '✓';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function appendMessage(role, text, isError = false) {
+    const row = document.createElement('div');
+    row.className = `msg-row ${role}`;
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    if (isError) {
+      bubble.style.border = '1px solid #ef4444';
+    }
+
+    if (role === 'ai') {
+      bubble.innerHTML = parseMarkdown(text);
+    } else {
+      bubble.textContent = text;
+    }
+
+    const ts = document.createElement('div');
+    ts.className = 'timestamp';
+    ts.textContent = getTime();
+
+    const wrap = document.createElement('div');
+    wrap.appendChild(bubble);
+    wrap.appendChild(ts);
+
+    if (role === 'ai') {
+      const av = document.createElement('div');
+      av.className = 'msg-avatar';
+      av.textContent = '🌾';
+      row.appendChild(av);
+    }
+
+    row.appendChild(wrap);
+    messagesEl.appendChild(row);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function parseMarkdown(text) {
+    return text
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/`(.+?)`/g, '<code>$1</code>')
+      .replace(/•/g, '&bull;')
+      .replace(/💡/g, '&#128161;')
+      .replace(/⚠/g, '&#9888;')
+      .replace(/↑/g, '&uarr;')
+      .replace(/↓/g, '&darr;')
+      .replace(/→/g, '&rarr;')
+      .replace(/─{3,}/g, '<hr style="border:none;border-top:1px solid #2a2b30;margin:8px 0">')
+      .replace(/\n/g, '<br>');
+  }
+
+  function showThinking() {
+    const row = document.createElement('div');
+    row.className = 'msg-row ai thinking';
+    row.id = 'thinking';
+
+    const av = document.createElement('div');
+    av.className = 'msg-avatar';
+    av.textContent = '🌾';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.innerHTML = `
+      <span>Sedang berfikir</span>
+      <div class="dots"><span></span><span></span><span></span></div>`;
+
+    row.appendChild(av);
+    row.appendChild(bubble);
+    messagesEl.appendChild(row);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function removeThinking() {
+    const el = document.getElementById('thinking');
+    if (el) el.remove();
+  }
+
+  async function sendMessage() {
+    const text = inputEl.value.trim();
+    if (!text && !currentImage) return;
+
+    inputEl.value = '';
+    inputEl.style.height = 'auto';
+    sendBtn.disabled = true;
+
+    if (text) {
+      appendMessage('user', text);
+    }
+    if (currentImage) {
+      appendMessage('user', '[Gambar telah dihantar]');
+    }
+
+    showThinking();
+
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: text,
+          image_base64: currentImage,
+          session_id: sessionId,
+          location: 'Malaysia'
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      removeThinking();
+
+      sessionId = data.session_id;
+      showAgent(data.intent);
+      appendMessage('ai', data.reply);
+
+    } catch (err) {
+      removeThinking();
+      showError('Ralat: ' + err.message + '. Pastikan server berjalan (npm run dev)');
+      console.error(err);
+    }
+
+    sendBtn.disabled = false;
+    inputEl.focus();
+
+    currentImage = null;
+    imageBtn.classList.remove('has-image');
+    imageBtn.textContent = '📷';
+    document.getElementById('imageInput').value = '';
+  }
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  }
+
+  // Live updates simulation for dashboard
+  setInterval(() => {
+    // Update weather temp slightly
+    const tempEl = document.querySelector('.weather-temp');
+    if (tempEl) {
+      const currentTemp = parseInt(tempEl.textContent);
+      const variation = Math.floor(Math.random() * 3) - 1;
+      tempEl.textContent = (currentTemp + variation) + '°';
+    }
+  }, 30000); // Every 30 seconds
+</script>
+
+</body>
+</html>
