@@ -6,7 +6,7 @@ const vertexAI = new VertexAI({
 });
 
 const model = vertexAI.getGenerativeModel({
-  model: 'gemini-2.0-flash',
+  model: 'gemini-2.5-flash-lite',
 });
 
 async function generateContent(prompt) {

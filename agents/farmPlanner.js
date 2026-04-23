@@ -3,73 +3,97 @@ const { retryWithBackoff } = require('../orchestrator');
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-async function farmPlanner(entities, history) {
+async function farmPlanner(entities) {
   const model = genAI.getGenerativeModel({
-    model: 'gemini-2.0-flash',
-    generationConfig: { maxOutputTokens: 800 }
+    model: 'gemini-2.5-flash',
+    generationConfig: {
+      maxOutputTokens: 2048,
+      responseMimeType: "application/json"
+    }
   });
 
-  const PROMPT = `You are PadiCare's Farm Planning Expert for Malaysian farmers.
-Create a week-by-week farming schedule. Return ONLY valid JSON:
+  // -------------------------
+  // STEP 1: SUMMARY (small)
+  // -------------------------
+  const SUMMARY_PROMPT = `
+Return ONLY JSON:
 {
-  "plan_summary": "summary in BM",
-  "crop_recommendation": "crop variety",
-  "planting_month": "best month",
-  "estimated_duration_weeks": number,
-  "total_estimated_cost_rm": number,
-  "expected_yield_ton": number,
-  "schedule": [
-    {"week": 1, "phase": "Persediaan", "tasks": ["task in BM"], "materials_needed": ["material"], "estimated_cost_rm": number, "notes": "notes in BM"}
-  ],
-  "critical_reminders": ["reminder in BM"],
-  "risk_factors": ["risk in BM"]
+  "crop": "Padi",
+  "duration_weeks": number,
+  "cost_rm": number,
+  "yield_ton": number,
+  "goal": "short description BM"
 }
-Defaults: Padi, 1 hectare, RM 3000-5000 budget, tropical Malaysian climate.`;
 
-  try {
-    const context = Object.entries(entities || {})
-      .filter(([_, v]) => v)
-      .map(([k, v]) => `${k}: ${v}`)
-      .join('\n') || 'Use default values for 1 hectare padi farm.';
+Context:
+${Object.entries(entities || {})
+  .map(([k, v]) => `${k}: ${v}`)
+  .join('\n') || "default padi farm"}
+`;
 
-    const result = await retryWithBackoff(() => model.generateContent(
-      `${PROMPT}\n\nFarmer inputs:\n${context}\n\nCreate the schedule now.`
-    ));
+  const summaryResult = await retryWithBackoff(() =>
+    model.generateContent(SUMMARY_PROMPT)
+  );
 
-    const response = result.response.text();
-    const jsonMatch = response.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      const plan = JSON.parse(jsonMatch[0]);
-      return { reply: formatPlanReply(plan), structured_data: plan };
+  const summary = JSON.parse(summaryResult.response.text());
+
+  // -------------------------
+  // STEP 2: SCHEDULE (small)
+  // -------------------------
+  const SCHEDULE_PROMPT = `
+Return ONLY JSON:
+{
+  "schedule": [
+    {
+      "week": 1,
+      "phase": "string",
+      "tasks": ["short task"]
     }
-    throw new Error('Invalid JSON from Farm Planner');
-  } catch (error) {
-    console.error('Farm Planner error:', error.message);
-    return {
-      reply: `Maaf, saya menghadapi masalah membuat pelan. Sila cuba lagi.\n\n(Error: ${error.message})`,
-      structured_data: null
-    };
+  ]
+}
+
+Rules:
+- Max ${summary.duration_weeks} weeks
+- Max 3 tasks per week
+- Short BM phrases only
+`;
+
+  const scheduleResult = await retryWithBackoff(() =>
+    model.generateContent(SCHEDULE_PROMPT)
+  );
+
+  let schedule;
+  try {
+    schedule = JSON.parse(scheduleResult.response.text());
+  } catch (e) {
+    schedule = { schedule: [] };
   }
+
+  const plan = {
+    ...summary,
+    schedule: schedule.schedule || []
+  };
+
+  return {
+    reply: formatPlanReply(plan),
+    structured_data: plan
+  };
 }
 
 function formatPlanReply(plan) {
-  let reply = `**Pelan Penanaman: ${plan.crop_recommendation}**\n\n${plan.plan_summary}\n\n`;
-  reply += `**Masa Tanam:** ${plan.planting_month}\n`;
-  reply += `**Jangka Masa:** ${plan.estimated_duration_weeks} minggu\n`;
-  reply += `**Kos Anggaran:** RM ${plan.total_estimated_cost_rm}\n`;
-  reply += `**Hasil Dijangka:** ${plan.expected_yield_ton} tan\n\n`;
-  reply += `**Jadual:**\n${'─'.repeat(30)}\n`;
-  plan.schedule.forEach(w => {
-    reply += `\n**Minggu ${w.week} — ${w.phase}**\n`;
-    w.tasks.forEach(t => { reply += `  • ${t}\n`; });
-    reply += `Bahan: ${w.materials_needed.join(', ')}\n`;
-    reply += `Kos: RM ${w.estimated_cost_rm}\n`;
-    if (w.notes) reply += `Nota: ${w.notes}\n`;
+  let reply = `**Pelan Padi**\n\n`;
+
+  reply += `Tempoh: ${plan.duration_weeks} minggu\n`;
+  reply += `Kos: RM ${plan.cost_rm}\n`;
+  reply += `Hasil: ${plan.yield_ton} tan\n\n`;
+
+  reply += `**Jadual:**\n`;
+
+  (plan.schedule || []).forEach(w => {
+    reply += `\nM${w.week} - ${w.phase}\n`;
+    (w.tasks || []).forEach(t => reply += `• ${t}\n`);
   });
-  if (plan.critical_reminders?.length > 0) {
-    reply += `\n**Peringatan:**\n`;
-    plan.critical_reminders.forEach(r => { reply += `⚠ ${r}\n`; });
-  }
+
   return reply;
 }
 
