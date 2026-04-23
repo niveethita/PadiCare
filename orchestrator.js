@@ -20,8 +20,11 @@ async function retryWithBackoff(fn, maxRetries = 3) {
 
 async function orchestrate(message, hasImage, history) {
   const model = genAI.getGenerativeModel({
-    model: 'gemini-2.0-flash-lite',
-    generationConfig: { maxOutputTokens: 300 }
+    model: 'gemini-2.5-flash-lite',
+    generationConfig: {
+      maxOutputTokens: 1024,              // ← was 300, too small for JSON
+      responseMimeType: 'application/json',
+    }
   });
 
   const ORCHESTRATOR_PROMPT = `You are PadiCare's Intent Classification System.
@@ -61,26 +64,45 @@ Return ONLY JSON, no markdown.`;
     const result = await retryWithBackoff(() =>
       model.generateContent(ORCHESTRATOR_PROMPT)
     );
+
     const response = result.response.text();
-    const jsonMatch = response.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      const parsed = JSON.parse(jsonMatch[0]);
-      if (hasImage) {
-        parsed.intent = 'crop_disease';
-        parsed.confidence = Math.max(parsed.confidence, 0.95);
-      }
-      return {
-        intent: parsed.intent || 'general',
-        confidence: parsed.confidence || 0.5,
-        extracted_entities: parsed.extracted_entities || {}
-      };
+    console.log('Raw orchestrator response:', response);
+
+    // Strip markdown fences as safety fallback
+    const stripped = response.replace(/```(?:json)?\n?/g, '').trim();
+
+    const jsonMatch = stripped.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      console.error('No JSON object found in response. Raw:', stripped);
+      throw new Error('No JSON found');
     }
-    throw new Error('Invalid JSON');
+
+    let parsed;
+    try {
+      parsed = JSON.parse(jsonMatch[0]);
+    } catch (parseError) {
+      console.error('JSON.parse failed:', parseError.message, '\nRaw:', stripped);
+      throw new Error('Invalid JSON');
+    }
+
+    if (hasImage) {
+      parsed.intent = 'crop_disease';
+      parsed.confidence = Math.max(parsed.confidence ?? 0, 0.95);
+    }
+
+    return {
+      intent: parsed.intent || 'general',
+      confidence: parsed.confidence || 0.5,
+      extracted_entities: parsed.extracted_entities || {}
+    };
+
   } catch (error) {
     console.error('Orchestrator error:', error.message);
+
     const msg = message.toLowerCase();
     let intent = 'general';
     let confidence = 0.5;
+
     if (hasImage || msg.includes('kuning') || msg.includes('bintik') || msg.includes('layu') || msg.includes('rosak')) {
       intent = 'crop_disease'; confidence = 0.8;
     } else if (msg.includes('harga') || msg.includes('jual') || msg.includes('pasaran')) {
@@ -88,11 +110,17 @@ Return ONLY JSON, no markdown.`;
     } else if (msg.includes('jadual') || msg.includes('rancang') || msg.includes('tanam')) {
       intent = 'plan'; confidence = 0.7;
     }
+
     return {
-      intent, confidence,
+      intent,
+      confidence,
       extracted_entities: {
         crop_type: msg.includes('padi') ? 'padi' : null,
-        symptoms: [], location: null, land_size: null, budget: null, timeframe: null
+        symptoms: [],
+        location: null,
+        land_size: null,
+        budget: null,
+        timeframe: null
       }
     };
   }

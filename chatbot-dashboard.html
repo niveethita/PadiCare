@@ -1096,7 +1096,7 @@
   const errorContainer = document.getElementById('errorContainer');
   const connectionStatus = document.getElementById('connectionStatus');
 
-  const API_URL = 'http://127.0.0.1:3008/api/chat';
+  const API_URL = 'http://127.0.0.1:3001/api/chat';
   let sessionId = null;
   let currentImage = null;
 
@@ -1109,7 +1109,7 @@
 
   async function checkConnection() {
     try {
-      const response = await fetch('http://127.0.0.1:3008/health', { method: 'GET' });
+      const response = await fetch('http://127.0.0.1:3001/health', { method: 'GET' });
       if (response.ok) {
         connectionStatus.textContent = 'Sambungan berjaya ✓';
         connectionStatus.className = 'connection-status connected';
@@ -1310,16 +1310,72 @@
     el.style.height = Math.min(el.scrollHeight, 120) + 'px';
   }
 
-  // Live updates simulation for dashboard
-  setInterval(() => {
-    // Update weather temp slightly
-    const tempEl = document.querySelector('.weather-temp');
-    if (tempEl) {
-      const currentTemp = parseInt(tempEl.textContent);
-      const variation = Math.floor(Math.random() * 3) - 1;
-      tempEl.textContent = (currentTemp + variation) + '°';
+  // Default weather values (fallback)
+  const defaultWeather = {
+    temp: 32,
+    condition: 'Cerah Berawan',
+    emoji: '⛅',
+    humidity: 78,
+    wind: 12,
+    rain: 0
+  };
+
+  // Fetch real-time weather from Open-Meteo API (no API key required)
+  async function fetchWeather() {
+    try {
+      // Selangor coordinates: 3.0738, 101.5183
+      const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=3.0738&longitude=101.5183&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=Asia%2FKuala_Lumpur');
+      if (!response.ok) throw new Error('Weather API failed');
+      const data = await response.json();
+      const current = data.current;
+
+      // Map weather codes to conditions
+      const weatherMap = {
+        0: { condition: 'Cerah', emoji: '☀️' },
+        1: { condition: 'Cerah Berawan', emoji: '🌤️' },
+        2: { condition: 'Berawan', emoji: '⛅' },
+        3: { condition: 'Mendung', emoji: '☁️' },
+        45: { condition: 'Kabus', emoji: '🌫️' },
+        48: { condition: 'Kabus Tebal', emoji: '🌫️' },
+        51: { condition: 'Rintik Ringan', emoji: '🌦️' },
+        53: { condition: 'Rintik Sederhana', emoji: '🌦️' },
+        55: { condition: 'Rintik Lebat', emoji: '🌧️' },
+        61: { condition: 'Hujan Ringan', emoji: '🌧️' },
+        63: { condition: 'Hujan Sederhana', emoji: '🌧️' },
+        65: { condition: 'Hujan Lebat', emoji: '⛈️' },
+        80: { condition: 'Hujan Ringan', emoji: '🌧️' },
+        81: { condition: 'Hujan Sederhana', emoji: '🌧️' },
+        82: { condition: 'Hujan Lebat', emoji: '⛈️' },
+        95: { condition: 'Ribut Petir', emoji: '⚡' },
+        96: { condition: 'Ribut Hujan', emoji: '⛈️' },
+        99: { condition: 'Ribut Lebat', emoji: '⛈️' }
+      };
+
+      const weather = weatherMap[current.weather_code] || { condition: 'Cerah Berawan', emoji: '⛅' };
+
+      // Update DOM
+      const tempEl = document.querySelector('.weather-temp');
+      const conditionEl = document.querySelector('.weather-condition');
+      const emojiEl = document.querySelector('.weather-emoji');
+      const humidityEl = document.querySelector('.weather-detail-value');
+      const windEl = document.querySelectorAll('.weather-detail-value')[1];
+      const rainEl = document.querySelectorAll('.weather-detail-value')[2];
+
+      if (tempEl) tempEl.textContent = Math.round(current.temperature_2m) + '°';
+      if (conditionEl) conditionEl.textContent = weather.condition;
+      if (emojiEl) emojiEl.textContent = weather.emoji;
+      if (humidityEl) humidityEl.textContent = current.relative_humidity_2m + '%';
+      if (windEl) windEl.textContent = current.wind_speed_10m + 'km/h';
+      if (rainEl) rainEl.textContent = '0mm'; // Open-Meteo doesn't provide current rain in this endpoint
+    } catch (err) {
+      console.log('Weather fetch failed, using defaults:', err.message);
+      // Keep default values - do nothing
     }
-  }, 30000); // Every 30 seconds
+  }
+
+  // Fetch weather on load and refresh every 10 minutes
+  fetchWeather();
+  setInterval(fetchWeather, 600000);
 </script>
 
 </body>

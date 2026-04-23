@@ -5,8 +5,11 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 async function cropDoctor(imageBase64, textDescription, history) {
   const model = genAI.getGenerativeModel({
-    model: 'gemini-2.0-flash',
-    generationConfig: { maxOutputTokens: 800 }
+    model: 'gemini-2.5-flash-lite',
+    generationConfig: {
+      maxOutputTokens: 2048,               // ← was 800, BM arrays need more room
+      responseMimeType: 'application/json', // ← forces clean JSON, no markdown
+    }
   });
 
   const PROMPT = `You are PadiCare's Crop Doctor, expert in Malaysian agriculture.
@@ -41,12 +44,30 @@ Always use Bahasa Malaysia for all text fields.`;
     }
 
     const response = result.response.text();
-    const jsonMatch = response.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      const diagnosis = JSON.parse(jsonMatch[0]);
-      return { reply: formatDiagnosisReply(diagnosis), structured_data: diagnosis };
+    console.log('Raw Crop Doctor response:', response); // ← debug log, remove once stable
+
+    // Strip markdown fences as safety fallback
+    const stripped = response.replace(/```(?:json)?\n?/g, '').trim();
+
+    const jsonMatch = stripped.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      console.error('No JSON found in Crop Doctor response. Raw:', stripped);
+      throw new Error('No JSON found from Crop Doctor');
     }
-    throw new Error('Invalid JSON from Crop Doctor');
+
+    let diagnosis;
+    try {
+      diagnosis = JSON.parse(jsonMatch[0]);
+    } catch (parseError) {
+      console.error('Crop Doctor JSON.parse failed:', parseError.message, '\nRaw:', stripped);
+      throw new Error('Invalid JSON from Crop Doctor');
+    }
+
+    return {
+      reply: formatDiagnosisReply(diagnosis),
+      structured_data: diagnosis
+    };
+
   } catch (error) {
     console.error('Crop Doctor error:', error.message);
     return {
@@ -58,22 +79,33 @@ Always use Bahasa Malaysia for all text fields.`;
 
 function formatDiagnosisReply(diagnosis) {
   const urgencyMap = {
-    'immediate': 'Segera', 'within_3_days': 'Dalam 3 hari',
-    'within_week': 'Dalam seminggu', 'not_urgent': 'Tidak mendesak'
+    'immediate': 'Segera',
+    'within_3_days': 'Dalam 3 hari',
+    'within_week': 'Dalam seminggu',
+    'not_urgent': 'Tidak mendesak'
   };
+
   let reply = `**Diagnosis: ${diagnosis.disease_name}**\n\n`;
   reply += `${diagnosis.explanation_bm}\n\n`;
   reply += `**Keparahan:** ${diagnosis.severity}\n`;
   reply += `**Tindakan:** ${urgencyMap[diagnosis.urgency] || diagnosis.urgency}\n\n`;
   reply += `**Langkah Rawatan:**\n`;
-  diagnosis.treatment_steps.forEach((step, i) => { reply += `${i + 1}. ${step}\n`; });
+  diagnosis.treatment_steps?.forEach((step, i) => { reply += `${i + 1}. ${step}\n`; });
+
   if (diagnosis.prevention_tips?.length > 0) {
     reply += `\n**Tips Pencegahan:**\n`;
     diagnosis.prevention_tips.forEach(tip => { reply += `• ${tip}\n`; });
   }
+
+  if (diagnosis.recommended_products?.length > 0) {
+    reply += `\n**Produk Disyorkan:**\n`;
+    diagnosis.recommended_products.forEach(product => { reply += `• ${product}\n`; });
+  }
+
   if (diagnosis.when_to_consult_expert) {
     reply += `\n**Bila Rujuk Pakar:** ${diagnosis.when_to_consult_expert}`;
   }
+
   return reply;
 }
 
