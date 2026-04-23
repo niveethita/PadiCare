@@ -1,0 +1,205 @@
+Traditionally, paddy planting is carried out once a year in Sarawak. With the recent
+introduction of hybrid rice and short term varieties, double cropping can be done annually.
+This will increase rice production in Sarawak. Due to the relatively low intensity of planting,
+coupled with either a fallow period or off-season crops of maize or watermelon, paddy
+diseases in Sarawak are not very severe. The more common diseases are blast, neck rot,
+sheath blight, brown spot and sheath rot. Bacterial leaf blight, leaf scald and false smut are
+minor diseases. Rice tungro disease, caused by a complex of two viruses, is not present in
+Sarawak. With the current focus on increasing paddy planting in Sarawak, there is a need for
+farmers and growers to arm themselves with knowledge on how to recognise the diseases,
+their level of risks and how to carry out an integrated disease management. Some of the
+paddy diseases in Sarawak are discussed here.
+Blast and neck rot
+
+Blast symptoms on leaves Neck rot
+Blast is the most common of all paddy diseases in Sarawak. The blast fungus, Pyricularia
+oryzae, attacks the rice plants at all stages of growth, producing spindle-shaped lesions on the
+leaves and causing neck rot at the culm of the panicle. The smaller leaf lesions are brown in
+colour, whereas the larger ones have grey centres with yellowish-brown margins. When neck
+rot develops, the culm breaks. Infection of the panicle produces brown spots at the base of
+the panicle. If severe infection occurs at the early stage of flowering, no grains will be
+formed. Then fungicide treatment becomes necessary.
+2
+Sheath blight
+ Sheath blight
+Brown spot
+
+Brown spot disease
+The sheath blight fungus, Rhizoctonia solani, produces
+greenish grey lesions on the leaf sheaths near the
+water/soil surface. These lesions which can be elliptical or
+oval, enlarge to 2-3cm long and coalesce to form large
+greyish white to brownish white patches with brown
+margins. On older lesions, white and brown sclerotia can
+sometimes be seen. Infection can spread to leaf blades or
+adjacent sheaths. In cases of severe infection, poor grain
+filling occurs. MADA (Malaysian Agricultural
+Development Authority) estimated the economic threshold
+level to be 10%, i.e. it is only economical to control the
+disease, if infection is more than 10%. However, the
+economic threshold level depends not only on the
+percentage of plants infected, but the stage of the disease
+infection. The cost of the pesticide treatment and the price
+of rice are also important factors to be considered. Studies
+by some Japanese researchers showed that when the
+disease reached the flag leaves, the yield loss was
+estimated at 25%.
+Brown spot disease is caused by the fungus, Helminthosporium
+oryzae (with synonyms, Drechslera oryzae/ Cochliobolus
+miyabeanus). Symptoms range from small circular lesions to
+larger oval lesions with brown margins and greyish to white
+centres on the leaves and glumes. Since this disease is often
+associated with poor soil fertility, improving the soil conditions
+and fertility can reduce the disease incidence. Unless it is very
+severe, fungicide treatment for this disease has been reported to
+be not economical, as yield is not significantly increased after
+application.
+3
+Bacterial leaf blight
+ Bacterial leaf blight
+Sheath rot
+ Sheath rot
+
+This disease is caused by the bacterium, Xanthomonas
+oryzae pv oryzae (syn. Xanthomonas campestris pv
+oryzae). Symptoms range from yellowish white lesions
+on the edge of the leaves to yellowish white stripes
+with a yellowish margin. When the bacterial infection
+becomes systemic, the leaves or the whole plant will
+wilt. The bacterial cells enter the vascular system of the
+plant through injuries on the roots or leaves. The
+bacterial cells ooze out of the leaf lesions in the
+morning and spread through contact with neighbouring
+wounded leaves, and through wind and irrigation water.
+If infected debris from the previous crop is not
+removed, infection can occur in the next crop. If the
+infection is localized, the yield loss will only be
+confined to the infected plants. There is no chemical
+control for this disease. Apart from carrying out
+integrated disease management as listed at the end of
+this article, avoid planting susceptible varieties, like
+MR84, in areas known to have the disease.
+The sheath rot fungus, Sarocladium oryzae (syn.
+Acrocylindrium oryzae), attacks the upper sheath that
+encloses the young panicle. Oblong or irregular spots with a
+brown margin and grey or greyish brown centre will form
+on most parts of the sheath. The infected young panicles
+remain within the sheath or only emerge partially. This
+disease is often associated with stem borers or other causes
+of injury to the lower portion of the stem. Controlling stem
+borers or avoiding injury to the lower stem during
+cultivation practices can reduce the disease incidence.
+4
+Leaf scald
+
+Leaf scald starting from the tip of leaf Leaf scald starting from edge of leaf
+Leaf scald is caused by the fungus, Rhynchosporium oryzae. Symptoms include the presence
+of lesions with light to dark brown zonation pattern developing from either the leaf tip, or
+from the edge of the leaf. When the lesions become old, the zonation pattern fades and the
+dried lesion appears scalded. Leaf tips of severely infected leaves may split in the middle.
+False smut
+
+ False smut
+
+The false smut fungus, Ustilaginoidea virens,
+transforms individual grains of the panicle into orangey
+to black spore balls of about 1 cm in diameter.
+Infection can take place at the booting stage or when
+the grains are mature. Usually only a few grains in a
+panicle are infected. The highly humid environment
+amongst the plants in high density planted areas
+favours the growth of the fungus. Normally, this
+disease is not serious in the field. Smut also attacks
+other hosts like Panicum spp., Digitaria spp., maize
+and other Oryza spp.
+5
+Integrated Management of Paddy Diseases
+Planting tolerant or less susceptible varieties is the mainstay of good disease management.
+The use of healthy seeds from good sources is critical to the success of the crop. In areas with
+a history of disease incidence, seed treatment with fungicides like captan or benomyl, before
+sowing, will reduce the disease severity. Optimal planting distance (depending on the tillering
+characteristic of the paddy variety) to avoid overcrowding of tillers is important to reduce the
+microclimate humidity amongst the leaves. Judicious use of nitrogen fertiliser is also
+important as excessive nitrogen fertiliser increases disease incidence and severity. Good
+water management in rain-fed areas must be ensured to prevent plant stress, which can
+increase disease incidence. Removal of crop debris after a harvest will reduce the disease
+incidence for the next crop. This is especially in areas where the disease incidences are high.
+Removal of graminaceous weeds will reduce the number of infection sources for the
+pathogens, both during cropping and off-season periods. If land use is not an issue, fallowing
+the land after a few cropping seasons can reduce the disease inoculum in the soil.
+Where pesticides are deemed necessary, practising judicious use of alternate pesticides will
+reduce the build-up of resistance by the pathogens. All pesticides used must be registered
+with the Malaysian Pesticide Board, and the application conditions on the label of the
+pesticide packaging adhered to. Some of the pesticides registered for use on paddy for the
+following diseases are:
+Disease Active ingredients of some of the recommended pesticides
+Blast and neck rot Isoprothiolane, tricyclazole, azoxystrobin + difenoconazole,
+trifloxystrobin + difenoconazole
+Sheath blight Pencycuron, azoxystrobin + difenoconazole, propineb, propiconazole
+Brown spot Iprodione, trifloxystrobin + difenoconazole, azoxystrobin +
+difenoconazole, mancozeb + carbendazim
+Sheath rot Mancozeb, benomyl
+Leaf scald Difenoconazole + propiconazole, thiophanate methyl, carbendazim,
+benomyl, mancozeb
+False smut Carbendazim, benomyl
+
+Rice blast disease (penyakit karah) is one of the most serious threats to rice production in Malaysia. The disease is caused by the fungal pathogen Pyricularia oryzae Carava, with the teleomorph known as Magnaporthe grisea. Rice fields in Malaysia are also affected by bacterial leaf blight, brown planthopper, and tungro disease, which can decrease yield by approximately 15 to 35 percent. However, blast disease alone can cause yield losses of up to 50 percent in severely infected fields. The first recorded incidence of blast disease in Peninsular Malaysia was in 1945, and the national average yield loss from blast has been estimated at around 20 percent.
+
+Penyakit karah padi adalah antara penyakit paling berbahaya yang menjejaskan pengeluaran padi di Malaysia. Penyakit ini disebabkan oleh kulat Pyricularia oryzae yang menyerang bahagian atas tanaman padi pada semua peringkat pertumbuhan. Kejadian penyakit karah pertama kali direkodkan di Semenanjung Malaysia pada tahun 1945. Kehilangan hasil purata negara dianggarkan sekitar 20 peratus, manakala kehilangan hasil plot boleh mencapai 70 peratus pada varieti yang terdedah seperti Jaya. Pada tahun 2017, sebanyak 1,453 hektar sawah padi dilaporkan dijangkiti karah daun dan 957 hektar dijangkiti karah panikul.
+
+There are two main types of blast disease commonly found in Malaysia. The first is foliar blast, which infects rice plants at the seedling stage, while the second is panicle blast, which attacks the panicle during the reproductive stage. Leaf blast symptoms appear as diamond-shaped lesions with white to grey-green centres and darker brown borders on the leaves. Infection at the foliar stage affects tillering, resulting in fewer panicles per hill. Panicle blast causes a condition known as rotten neck or neck rot at the base of the panicle, leading to either partially unfilled grains or complete breakage of the panicle, resulting in total yield loss.
+
+Terdapat dua jenis utama penyakit karah yang biasa ditemui di Malaysia. Karah daun menyerang anak benih semasa peringkat persemaian, manakala karah panikul menyerang panikul semasa peringkat pembiakan. Gejala karah daun kelihatan sebagai lesi berbentuk berlian dengan pusat kelabu-putih dan sempadan perang-merah pada daun. Jangkitan pada peringkat daun menjejaskan proses pertumbuhan anakan, mengakibatkan bilangan panikul yang lebih sedikit setiap rumpun. Karah panikul pula menyebabkan keadaan yang dikenali sebagai leher busuk pada pangkal panikul, yang boleh mengakibatkan kehilangan hasil sepenuhnya.
+
+The blast pathogen thrives under specific environmental conditions. According to research, long periods of leaf wetness, high relative humidity above 89 percent, and temperatures between 25 and 28 degrees Celsius are most favourable for Pyricularia oryzae sporulation. Conidial germination is optimal at relative humidity between 92 and 96 percent and temperatures between 25 and 28 degrees Celsius. One cycle of blast disease can be completed within a single week, and a single lesion is capable of generating new spores after just twenty days. The pathogen can survive on rice residues in the field for at least two cropping seasons.
+
+Patogen karah membiak dengan cepat dalam keadaan persekitaran yang sesuai. Kelembapan relatif melebihi 89 peratus dan suhu antara 25 hingga 28 darjah Celsius merupakan syarat optimum untuk pengeluaran spora Pyricularia oryzae. Satu kitaran penyakit karah boleh diselesaikan dalam masa seminggu, dan satu lesi boleh menghasilkan spora baru selepas dua puluh hari. Patogen ini boleh bertahan pada sisa tanaman padi di sawah selama sekurang-kurangnya dua musim penanaman. Spora disebarkan melalui arus angin dan air, dan jangkitan berlaku apabila tempoh kebasahan daun adalah antara 7 hingga 14 jam.
+
+The use of resistant varieties is the most economical method to control rice blast in Malaysia. MARDI has been developing blast-resistant varieties since 1969. MR 7, released in 1979, was among the earliest varieties resistant to blast and had broad-spectrum resistance against Pyricularia oryzae. Later, MR 219 released in 2001 and MR 220 released in 2003 became the dominant varieties, covering over 90 percent of main production areas. However, a high incidence of panicle blast on MR 219 during the main season of 2008 and 2009 led to its withdrawal. MARDI subsequently released MR 253 and MR 263 in 2010 as moderately resistant alternatives. In 2016, MARDI released MARDI Siraj 297, which is resistant to both foliar and panicle blast.
+
+Penggunaan varieti tahan adalah kaedah paling ekonomik untuk mengawal penyakit karah padi di Malaysia. MARDI telah membangunkan varieti tahan karah sejak tahun 1969. MR 7 yang dilepaskan pada tahun 1979 adalah antara varieti pertama yang tahan terhadap karah dan mempunyai rintangan spektrum luas terhadap Pyricularia oryzae. MR 219 yang dilepaskan pada 2001 dan MR 220 pada 2003 kemudiannya menguasai lebih 90 peratus kawasan pengeluaran utama. Walau bagaimanapun, insiden karah panikul yang tinggi pada MR 219 semasa musim utama 2008 hingga 2009 menyebabkan varieti ini ditarik balik. MARDI kemudiannya melepaskan MARDI Siraj 297 pada 2016, yang tahan terhadap karah daun dan karah panikul.
+
+When resistant varieties are insufficient, chemical fungicides are used as a last resort. Research in Malaysia recommends systemic fungicides based on active ingredients of tricyclazole, isoprothiolane, or azoxystrobin for controlling blast in rice fields. For leaf blast control, fungicides should be sprayed as soon as lesions first appear on the rice leaves, followed by a second and third spray at 3 to 7 day intervals. To control panicle blast, fungicides must be applied before 25 percent panicle initiation stage. Tricyclazole applied at 0.05 percent concentration has been the most commonly recommended chemical in Malaysia for both leaf blast and panicle blast. Farmers are advised to rotate fungicide active ingredients to prevent the pathogen from developing resistance.
+
+Apabila varieti tahan tidak mencukupi, fungisida kimia digunakan sebagai langkah terakhir. Kajian di Malaysia mengesyorkan fungisida sistemik berdasarkan bahan aktif triklorasol, isoprothiolan atau azoxystrobin untuk mengawal karah di sawah padi. Untuk mengawal karah daun, fungisida perlu disembur sejurus selepas lesi pertama kali kelihatan pada daun padi, diikuti semburan kedua dan ketiga pada selang 3 hingga 7 hari. Untuk mengawal karah panikul, fungisida mesti digunakan sebelum peringkat permulaan 25 peratus panikul. Triklorasol pada kepekatan 0.05 peratus adalah bahan kimia yang paling kerap disyorkan di Malaysia untuk kedua-dua jenis karah.
+
+Excessive nitrogen fertilizer increases the susceptibility of rice plants to blast disease. Malaysian farmers are currently advised not to apply more than 120 kg per hectare of nitrogen. Research shows that a single large application of nitrogen significantly increases disease incidence compared to split nitrogen applications. For local conditions, nitrogen should be applied in four split applications, each totalling less than 120 kg per hectare. Proper field drainage is also important because shallow water favours blast development more than deep water, and low water supply increases spore mobility across the rice field.
+
+Penggunaan baja nitrogen yang berlebihan meningkatkan kerentanan tanaman padi terhadap penyakit karah. Petani Malaysia kini dinasihatkan agar tidak menggunakan lebih daripada 120 kg setiap hektar nitrogen. Kajian menunjukkan bahawa satu aplikasi nitrogen yang besar meningkatkan insiden penyakit berbanding dengan aplikasi nitrogen yang dibahagikan. Untuk keadaan tempatan, nitrogen harus digunakan dalam empat aplikasi bahagian, masing-masing kurang daripada 120 kg setiap hektar. Kawalan rumpai juga penting kerana Pyricularia oryzae boleh bertahan pada spesies rumpai seperti Echinochloa crus-galli yang biasa ditemui di kawasan penanaman padi.
+
+Silicon fertilizers have been shown to be effective in reducing blast disease severity in Malaysian rice fields. Silicon is deposited as a layer beneath the cuticle of rice leaves, forming a physical barrier that slows penetration by the blast fungus. Research on MR 219 showed that granular silica gel containing 95 percent silicon dioxide significantly reduced disease severity and incidence compared to untreated plants. Granular silica gel was found to be more effective than liquid silicon forms in controlling leaf blast. Rice straws returned to the field as compost can contribute between 300 and 1,000 kg per hectare per year of silicon dioxide, helping to maintain silicon levels in paddy soil.
+
+Baja silikon telah terbukti berkesan dalam mengurangkan keparahan penyakit karah di sawah padi Malaysia. Silikon didepositkan sebagai lapisan di bawah kutikula daun padi, membentuk halangan fizikal yang melambatkan penembusan kulat karah. Kajian ke atas MR 219 menunjukkan bahawa silika gel berbutir mengandungi 95 peratus silikon dioksida telah mengurangkan keparahan dan insiden penyakit berbanding tanaman yang tidak dirawat. Jerami padi yang dikembalikan ke sawah sebagai kompos boleh menyumbang antara 300 hingga 1,000 kg setiap hektar setiap tahun silikon dioksida, membantu mengekalkan paras silikon dalam tanah sawah.
+
+Biocontrol agents offer a promising supplementary method for managing rice blast. Research has shown that Trichoderma harzianum can reduce neck blast and leaf blast incidences in susceptible varieties, though its effectiveness may vary depending on environmental conditions such as humidity and nitrogen levels in the soil. Bacillus species have been reported to lower blast disease severity by up to 40 percent, a result statistically comparable to treatment with chemical fungicides. Bacillus methylotrophicus strain BC79 has been identified as a potential biocontrol agent that causes morphological damage to Pyricularia oryzae, including enlarged hyphae, abnormal shapes, and cell death. Certain yeast strains, specifically CMY045 and CMY018, have also shown potential in reducing rice blast disease incidence under field conditions to around 18 percent.
+
+Agen biokawalan menawarkan kaedah tambahan yang menjanjikan untuk mengurus penyakit karah padi. Kajian telah menunjukkan bahawa Trichoderma harzianum boleh mengurangkan insiden karah leher dan karah daun pada varieti yang terdedah, walaupun keberkesanannya berbeza-beza bergantung kepada keadaan persekitaran. Spesies Bacillus telah dilaporkan dapat mengurangkan keparahan penyakit karah sehingga 40 peratus, keputusan yang setara secara statistik dengan rawatan menggunakan fungisida kimia. Strain Bacillus methylotrophicus BC79 menyebabkan kerosakan morfologi pada Pyricularia oryzae, termasuk hifa yang membesar, bentuk tidak normal dan kematian sel. Strain yis tertentu, khususnya CMY045 dan CMY018, juga menunjukkan potensi dalam mengurangkan insiden penyakit karah di sawah.
+
+
+Rice is a crucial staple crop for global food security, particularly in regions like Malaysia, but its production is continually threatened by devastating bacterial and fungal diseases
+These biological pathogens can destroy a significant portion of the annual yield, making the rapid identification and integrated management of these diseases essential for maintaining crop stability
+
+Four major bacterial diseases currently pose severe risks to rice fields: Bacterial Leaf Blight, Bacterial Leaf Streak, Bacterial Panicle Blight, and Sheath Brown Rot
+Bacterial Leaf Blight, caused by Xanthomonas oryzae pv. oryzae, produces blighted leaves and a severe seedling wilting stage known as the kresek phase, which can cause up to a 50% yield loss if the infection occurs early
+Bacterial Leaf Streak, driven by a closely related pathogen, penetrates the plant through open stomata or wounds to cause translucent streaks that eventually blight the entire leaf surface
+Bacterial Panicle Blight thrives during periods of high humidity and warm nights, rotting the grain and causing severe floret sterility, while Sheath Brown Rot primarily attacks the lower leaf sheaths, leading to necrotic tissues and entirely empty, discolored grains
+
+Managing these bacterial outbreaks requires integrated and adaptive strategies, as completely effective and environmentally safe chemical treatments are currently unavailable and can harm non-target organisms
+Consequently, agricultural experts highly recommend cultural practices such as utilizing disease-resistant seeds, ensuring proper field drainage, avoiding excessive nitrogen fertilizers, and completely removing infected stubble after a harvest
+ Furthermore, biological control is rapidly emerging as a sustainable alternative, utilizing antagonistic microorganisms like Bacillus species, Pseudomonas species, and bacteriophages to naturally suppress the growth and development of rice pathogens while simultaneously promoting overall plant health
+
+Fungal infections, particularly the devastating rice blast disease caused by Magnaporthe oryzae, represent another major constraint that can severely damage the plant's leaves, collars, nodes, and panicles
+ Beyond creating physical lesions, the blast fungus severely disrupts the internal physiological health of susceptible rice varieties by significantly reducing their chlorophyll content and their overall photosynthetic capacity
+ This physiological decline occurs because the invading pathogen aggressively competes for the plant's internal carbon sources, and the plant simultaneously drains its own energy reserves in a desperate attempt to activate its defensive mechanisms
+
+Combatting rice blast effectively relies heavily on the plant's innate immune system and specific genomic responses
+ Recent expression studies on Malaysian rice varieties have demonstrated that the rapid, simultaneous upregulation of the Pikh, Pi9, Pi21, and Osw45 resistance genes at 31 hours post-infection is critical for fighting off the fungal pathogen
+ When these specific defense genes are activated together, the plant successfully restricts the fungus from accessing cellular carbon without heavily depleting its own internal energy
+ As a result, resistant rice varieties possessing these active, upregulated genes can rapidly recover their immune systems and maintain normal photosynthesis and chlorophyll levels despite being exposed to the disease
+
+
+
+
+
+
+
