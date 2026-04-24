@@ -1096,7 +1096,7 @@
   const errorContainer = document.getElementById('errorContainer');
   const connectionStatus = document.getElementById('connectionStatus');
 
-  const API_URL = 'http://127.0.0.1:3001/api/chat';
+  const API_URL = '/api/chat';
   let sessionId = null;
   let currentImage = null;
 
@@ -1109,7 +1109,7 @@
 
   async function checkConnection() {
     try {
-      const response = await fetch('http://127.0.0.1:3001/health', { method: 'GET' });
+      const response = await fetch('/health', { method: 'GET' });
       if (response.ok) {
         connectionStatus.textContent = 'Sambungan berjaya ✓';
         connectionStatus.className = 'connection-status connected';
