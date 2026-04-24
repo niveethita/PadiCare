@@ -15,6 +15,11 @@ app.get('/', (req, res) => res.sendFile(__dirname + '/chatbot-dashboard.html'));
 // In-memory session store (use Redis in production)
 const sessions = new Map();
 
+app.get('/', (req, res) => {
+  console.log('Looking for:', __dirname + '/chatbot-dashboard.html');
+  res.sendFile(__dirname + '/chatbot-dashboard.html');
+});
+
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
