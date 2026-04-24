@@ -10,7 +10,7 @@ const START_PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(__dirname));
-app.get('/', (req, res) => res.sendFile(__dirname + '/chaybot-dshbord.html'));
+app.get('/', (req, res) => res.sendFile(__dirname + '/chatbot-dashboard.html'));
 
 // In-memory session store (use Redis in production)
 const sessions = new Map();
