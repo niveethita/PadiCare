@@ -51,7 +51,7 @@ async function unifiedChat(message, imageBase64, location, history = []) {
     };
 
   } catch (error) {
-    console.error('Unified chat error:', error.message);
+console.error('Unified chat error:', error.message, error.stack);
 
     // Rule-based fallback intent detection
     const msg = (message || '').toLowerCase();
