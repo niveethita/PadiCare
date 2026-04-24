@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const { unifiedChat } = require('./unifiedChat');
@@ -54,10 +55,12 @@ app.post('/api/chat', async (req, res) => {
       confidence: result.confidence,
       session_id: sessionId,
       timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString(),
     });
 
   } catch (error) {
     console.error('Error in /api/chat:', error);
+    res.status(500).json({ error: 'Internal server error', message: error.message });
     res.status(500).json({ error: 'Internal server error', message: error.message });
   }
 });
